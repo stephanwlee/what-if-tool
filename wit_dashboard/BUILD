@@ -41,6 +41,7 @@ tf_web_library(
         ":wit_example_viewer",
         ":wit_inference_panel",
         ":wit_inference_viewer",
+        "@org_tensorflow_tensorboard//tensorboard/components/experimental/plugin_lib:plugin_lib_polymer_interop",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_backend",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_dashboard_common",
         "@org_tensorflow_tensorboard//tensorboard/components/tf_imports:polymer",
@@ -124,7 +125,7 @@ tensorboard_html_binary(
         ":wit_tensorboard",
     ],
 )
-    
+
 
 tf_web_library(
     name = "wit_inference_viewer",

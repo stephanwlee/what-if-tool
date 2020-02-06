@@ -14,6 +14,7 @@ http_archive(
 )
 
 load("@bazel_skylib//lib:versions.bzl", "versions")
+
 # Keep this version in sync with the BAZEL environment variable defined
 # in our .travis.yml config.
 versions.check(minimum_bazel_version = "0.26.1")
@@ -29,9 +30,11 @@ http_archive(
 )
 
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
+
 web_test_repositories()
 
 load("@io_bazel_rules_webtesting//web:py_repositories.bzl", "py_repositories")
+
 py_repositories()
 
 http_archive(
@@ -45,10 +48,10 @@ http_archive(
 )
 
 load("@io_bazel_rules_closure//closure:repositories.bzl", "rules_closure_dependencies")
+
 rules_closure_dependencies(
     omit_com_google_protobuf_js = True,
 )
-
 
 http_archive(
     name = "build_bazel_rules_nodejs",
@@ -57,21 +60,22 @@ http_archive(
 )
 
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories", "yarn_install")
+
 node_repositories()
 
 yarn_install(
     name = "npm",
+    data = [
+        # package.json contains postinstall that requires this file.
+        "//:angular-metadata.tsconfig.json",
+    ],
     package_json = "//:package.json",
-    yarn_lock = "//:yarn.lock",
     # Opt out of symlinking local node_modules folder into bazel internal
     # directory.  Symlinking is incompatible with our toolchain which often
     # removes source directory without `bazel clean` which creates broken
     # symlink into node_modules folder.
     symlink_node_modules = False,
-    data = [
-        # package.json contains postinstall that requires this file.
-        "//:angular-metadata.tsconfig.json",
-    ],
+    yarn_lock = "//:yarn.lock",
 )
 
 load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
@@ -91,15 +95,21 @@ http_archive(
 )
 
 load("@org_tensorflow//tensorflow:workspace.bzl", "tf_workspace")
+
 tf_workspace()
 
-http_archive(
+# http_archive(
+#     name = "org_tensorflow_tensorboard",
+#     sha256 = "71625480b07f7a85cded3d8ab24c0f9cf3301628073e46874d0f35e76e56d058",
+#     strip_prefix = "tensorboard-b8659a862412073c0ac064080733da96c10efee2",
+#     urls = [
+#         "https://github.com/tensorflow/tensorboard/archive/b8659a862412073c0ac064080733da96c10efee2.tar.gz",  # 2019-12-04
+#     ],
+# )
+
+local_repository(
     name = "org_tensorflow_tensorboard",
-    sha256 = "71625480b07f7a85cded3d8ab24c0f9cf3301628073e46874d0f35e76e56d058",
-    strip_prefix = "tensorboard-b8659a862412073c0ac064080733da96c10efee2",
-    urls = [
-        "https://github.com/tensorflow/tensorboard/archive/b8659a862412073c0ac064080733da96c10efee2.tar.gz",  # 2019-12-04
-    ],
+    path = "/usr/local/google/home/stephanlee/git/tensorboard",
 )
 
 load("@org_tensorflow_tensorboard//third_party:workspace.bzl", "tensorboard_workspace")

@@ -58,6 +58,7 @@ limitations under the License.
   rel="import"
   href="../facets-overview/components/facets-overview/facets-overview.html"
 />
+<link rel="import" href="../tf-plugin-lib/polymer-interop.html" />
 <!--
   A frontend that displays a set of editable examples and enables inference of those examples,
   visualizing the results.
@@ -2186,7 +2187,7 @@ limitations under the License.
                             </div>
                             <div class="help-text">
                               <div>
-                                Shows the model's performance on datapoints 
+                                Shows the model's performance on datapoints
                                 grouped by each value of the selected feature.
                               </div>
                             </div>
@@ -4101,7 +4102,9 @@ limitations under the License.
           dialog.open();
         },
 
-        ready: function() {
+        ready: async function() {
+          const data = await tb_plugin_lib.experimental.core.getURLPluginData();
+          console.log('hehe, this works', data);
           const side = d3.select(this.$.side);
           const center = d3.select(this.$.center);
           const resizer = this.$.resizer;
